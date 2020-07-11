@@ -1,7 +1,7 @@
 // Retorna la url del servicio. Es una función de configuración.
 function BBServiceURL() {
     var host = window.location.host;
-    var url = 'wss://' + (host) + '/bbService';
+    var url = 'ws://' + (host) + '/bbService';
     console.log("URL Calculada: " + url);
     return url;
 }
@@ -15,11 +15,13 @@ class WSBBChannel {
         this.wsocket.onmessage = (evt) => this.onMessage(evt);
         this.wsocket.onerror = (evt) => this.onError(evt);
         this.receivef = callback;
+        //this.ticket = null;
     }
 
 
     onOpen(evt) {
         console.log("In onOpen", evt);
+        fetch("/getTicket").then(res => res.json()).then((result) => this.wsocket.send(result));
     }
     onMessage(evt) {
         console.log("In onMessage", evt);
@@ -28,6 +30,7 @@ class WSBBChannel {
         // De ahí en adelante intercambiaremos solo puntos(x,y) con el servidor
         if (evt.data != "Connection established.") {
             this.receivef(evt.data);
+            //this.wsocket.send(this.ticket);
         }
     }
     onError(evt) {

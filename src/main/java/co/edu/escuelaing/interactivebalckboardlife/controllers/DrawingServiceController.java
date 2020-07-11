@@ -8,6 +8,8 @@ package co.edu.escuelaing.interactivebalckboardlife.controllers;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import co.edu.escuelaing.interactivebalckboardlife.repositories.TicketRepository;
+
 
 @RestController
 public class DrawingServiceController {
@@ -19,4 +21,12 @@ public class DrawingServiceController {
                 java.time.LocalTime.now() +
                 ". " + "The server is Runnig!\"}";
     }
+
+    @GetMapping("/getTicket")
+    public String getTicket() {
+        //System.out.println("GET TICKET");
+        return TicketRepository.getInstance().getTicket();
+    }
+
+
 }
