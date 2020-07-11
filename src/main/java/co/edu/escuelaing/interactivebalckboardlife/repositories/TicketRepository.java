@@ -1,34 +1,44 @@
 package co.edu.escuelaing.interactivebalckboardlife.repositories;
 
-import java.util.ArrayList;
-import java.util.List;
-//import java.util.concurrent;
+
+
 import java.util.Random;
 
+import javax.annotation.Resource;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.ListOperations;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.stereotype.Component;
+
+@Component
 public class TicketRepository {
 
-    private List<String> tickets;
+    @Autowired
+    private StringRedisTemplate template;
 
-    private TicketRepository() {
-        tickets = new ArrayList<>();
+    // inject the template as ListOperations
+    @Resource(name = "stringRedisTemplate")
+    private ListOperations<String, String> listTickets;
+
+    //private List<String> tickets;
+
+    public TicketRepository() {
+        //ickets = new ArrayList<>();
     }
 
-    private static class helper {
-        private static final TicketRepository INSTANCE = new TicketRepository();
-    }
-
-    public static TicketRepository getInstance() {
-        return helper.INSTANCE;
-    }
-    public String getTicket(){
+    public synchronized String getTicket() {
         Random r = new Random();
         int rand = r.hashCode();
         String ticket = Integer.toString(rand);
-        tickets.add(ticket);
+        //tickets.add(ticket);
+        listTickets.leftPush("ticketStore",ticket);
         return ticket;
     }
-    public boolean checkTicket(String t){
-        return tickets.remove(t);
+
+    public boolean checkTicket(String t) {
+        Long isValid = listTickets.getOperations().boundListOps("ticketStore").remove(0, t);
+        return (isValid > 0l);
     }
 
 }
