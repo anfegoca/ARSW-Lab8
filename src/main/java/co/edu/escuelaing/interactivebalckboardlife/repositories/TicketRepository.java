@@ -36,7 +36,7 @@ public class TicketRepository {
         return ticket;
     }
 
-    public boolean checkTicket(String t) {
+    public synchronized boolean checkTicket(String t) {
         Long isValid = listTickets.getOperations().boundListOps("ticketStore").remove(0, t);
         return (isValid > 0l);
     }

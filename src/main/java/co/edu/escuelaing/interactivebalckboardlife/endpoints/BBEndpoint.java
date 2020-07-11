@@ -19,6 +19,7 @@ import javax.websocket.server.ServerEndpoint;
 import org.springframework.stereotype.Component;
 
 import co.edu.escuelaing.interactivebalckboardlife.configurator.BBApplicationContextAware;
+import co.edu.escuelaing.interactivebalckboardlife.repositories.SessionRepo;
 import co.edu.escuelaing.interactivebalckboardlife.repositories.TicketRepository;
 
 @Component
@@ -30,6 +31,7 @@ public class BBEndpoint {
     static Queue<Session> queue = new ConcurrentLinkedQueue<>();
 
     TicketRepository ticketRepo =(TicketRepository)BBApplicationContextAware.getApplicationContext().getBean("ticketRepository");
+    //SessionRepo sessionRepo =(SessionRepo)BBApplicationContextAware.getApplicationContext().getBean("sessionRepo");
 
     Session ownSession = null;
     boolean conectado = false;
@@ -63,6 +65,7 @@ public class BBEndpoint {
                 //System.out.println("Muere");
                 try {
                     queue.remove(session);
+                    //sessionRepo.removeSession(session);
                     session.close();
                 } catch (IOException e) {
                     // TODO Auto-generated catch block
@@ -75,11 +78,16 @@ public class BBEndpoint {
     @OnOpen
     public void openConnection(Session session) {
         /* Register this connection in the queue */
+        //System.out.println("SESSIONREPO "+sessionRepo+"Session "+session);
+        //sessionRepo.addSession(session);
         queue.add(session);
         ownSession = session;
+        //System.out.println("JOHANN ES RE GURRERO");
         logger.log(Level.INFO, "Connection opened.");
         try {
+            
             session.getBasicRemote().sendText("Connection established.");
+
         } catch (IOException ex) {
             logger.log(Level.SEVERE, null, ex);
         }
@@ -88,6 +96,7 @@ public class BBEndpoint {
     @OnClose
     public void closedConnection(Session session) {
         /* Remove this connection from the queue */
+        //sessionRepo.removeSession(session);
         queue.remove(session);
         logger.log(Level.INFO, "Connection closed for session " + session);
     }
@@ -95,7 +104,8 @@ public class BBEndpoint {
     @OnError
     public void error(Session session, Throwable t) {
         /* Remove this connection from the queue */
-        queue.remove(session);
+        //sessionRepo.removeSession(session);
+        queue.remove();
         logger.log(Level.INFO, t.toString());
         logger.log(Level.INFO, "Connection error.");
     }
