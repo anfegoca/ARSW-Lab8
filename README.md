@@ -76,7 +76,7 @@ Ahora la volvemos a iniciar
 
 Iniciamos la aplicación en otro cliente y vemos que hay interacción entre ambos
 
-![class](https://github.com/anfegoca/ARSW-lab7/blob/master/resources/9.png)
+![class](https://github.com/anfegoca/ARSW-lab8/blob/master/resources/9.png)
 
 En el caso que la aplicación deje de funcionar tambien se guardará la información de las sesiones anteriores
 
@@ -107,7 +107,7 @@ This project is licensed under the MIT License - see the [LICENSE.txt](LICENSE.t
 
 ## Design
 
-![class](https://github.com/anfegoca/ARSW-lab7/blob/master/resources/Class Diagram0.png)
+![class](https://github.com/anfegoca/ARSW-Lab8/blob/master/resources/Class%20Diagram0.png)
 
 Cuando un cliente se conecta pide un ticket al **DrawingServiceController**, este se lo solicita a **TicketRepository**, este genera un ticket aleatorio y lo guarda en redis, cuando
 el cliente tiene el ticket lo envia para poderse conectar al webSocket, el **BBEndpoint** tiene injectado el **TicketRepository** y **SessionRepository**, valida que el ticket sea el
