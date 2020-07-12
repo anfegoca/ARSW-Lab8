@@ -25,6 +25,7 @@ public class SessionRepo {
     @Resource(name = "redisTemplate")
     private ListOperations<String,Session> listSessions;
 
+
     public List<Session> getSessions(){
         
         return listSessions.range("SessionStore", 0l, listSessions.size("SessionStore"));
